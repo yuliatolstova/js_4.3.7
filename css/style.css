@@ -1,0 +1,46 @@
+@import url("https://fonts.googleapis.com/css2?family=Hind&family=Lato:ital,wght@0,400;0,700;1,400&family=Roboto&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+}
+body {
+  background: #c4c4c4;
+  padding: 0 20px;
+}
+
+.app {
+  max-width: 500px;
+  margin: 70px auto;
+}
+
+.search-line {
+  position: relative;
+}
+
+.search-line input {
+  background: #fff;
+  height: 61px;
+  width: 100%;
+  outline: none;
+  border: none;
+  padding: 5px 13px;
+  font-size: 48px;
+}
+.repos-wrapper {
+  width: 100%;
+}
+.repos li {
+  list-style: none;
+  padding: 9px 13px;
+  background: #e3e3e3;
+  font-size: 30px;
+  border: 2px solid black;
+  display: block;
+}
+
+.repos li:hover,
+.repos li:active {
+  background: #65cdf9;
+}
