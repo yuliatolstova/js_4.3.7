@@ -44,3 +44,28 @@ body {
 .repos li:active {
   background: #65cdf9;
 }
+.selected-repos {
+  margin-top: 45px;
+}
+.selected-repos li {
+  list-style: none;
+  padding: 8px 16px;
+  background: #e27beb;
+  font-size: 24px;
+  border: 1px solid black;
+  display: block;
+  position: relative;
+}
+.selected-repos li span {
+  display: block;
+}
+
+.cross {
+  position: absolute;
+  top: 31px;
+  right: 34px;
+  display: block;
+  height: 42px;
+  width: 42px;
+  background: url(/img/cross.svg) 0 0/42px 42px no-repeat;
+}

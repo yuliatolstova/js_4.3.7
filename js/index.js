@@ -1,5 +1,6 @@
 class View {
-  constructor() {
+  constructor(api) {
+    this.api = api;
     this.app = document.getElementById('app');
 
     this.searchLine = this.createElement('div', 'search-line');
@@ -9,6 +10,9 @@ class View {
     this.reposWrapper = this.createElement('div', 'repos-wrapper');
     this.reposList = this.createElement('ul', 'repos');
     this.reposWrapper.append(this.reposList);
+
+    this.selectedReposList = this.createElement('ul', 'selected-repos');
+    this.reposWrapper.append(this.selectedReposList);
 
     this.main = this.createElement('div', 'main');
     this.main.append(this.reposWrapper);
@@ -25,22 +29,41 @@ class View {
   }
   createRepos(reposData) {
     const repoElement = this.createElement('li', 'repo-prev');
+    repoElement.addEventListener('click', () => this.showRepoData(reposData.name, reposData.owner.login, reposData.stargazers_count));
     repoElement.insertAdjacentHTML('afterbegin', `<span class="repo-prev-name">${reposData.name}</span>`);
     this.reposList.append(repoElement);
+  }
+  showRepoData(name, owner, stars) {
+    this.searchInput.value = '';
+    const selectedRepo = this.createElement('li', 'selected-repo');
+    selectedRepo.insertAdjacentHTML('afterbegin', `<span>Name: ${name}</span> <span>Owner: ${owner}</span> <span>Stars: ${stars}</span> <i class="cross"></i>`);
+    let selectedRepoId = `${name}-${owner}`;
+    selectedRepo.setAttribute('id', selectedRepoId);
+    if (!document.getElementById(selectedRepoId)) {
+      this.selectedReposList.append(selectedRepo);
+    }
+    selectedRepo.addEventListener('click', (e) => this.deleteSelectedRepo(e));
+  }
+  deleteSelectedRepo(e) {
+    if ((e.target.className = 'cross')) {
+      e.target.closest('li').remove();
+    }
   }
 }
 //
 const REPOS_PER_PAGE = 5;
 class Search {
-  constructor(view) {
+  constructor(view, api) {
     this.view = view;
+    this.api = api;
+
     this.view.searchInput.addEventListener('keyup', this.debounce(this.searchRepos.bind(this), 400));
   }
-  async searchRepos() {
+  searchRepos() {
     const searchValue = this.view.searchInput.value;
     if (searchValue) {
       this.clearRepos();
-      return await fetch(`https://api.github.com/search/repositories?q=${searchValue}&per_page=${REPOS_PER_PAGE}`).then((res) => {
+      this.api.searchRepos(searchValue).then((res) => {
         if (res.ok) {
           res.json().then((res) => {
             res.items.forEach((repo) => {
@@ -54,7 +77,7 @@ class Search {
     }
   }
   clearRepos() {
-    this.view.reposList.innerHTML = ''; //('afterbegin', '');
+    this.view.reposList.innerHTML = '';
   }
   debounce(func, wait, immediate) {
     let timeout;
@@ -72,4 +95,12 @@ class Search {
     };
   }
 }
-new Search(new View());
+const URL = 'https://api.github.com/';
+class Api {
+  async searchRepos(value) {
+    return await fetch(`${URL}search/repositories?q=${value}&per_page=${REPOS_PER_PAGE}`);
+  }
+}
+
+const api = new Api();
+new Search(new View(api), api);
