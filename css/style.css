@@ -67,5 +67,5 @@ body {
   display: block;
   height: 42px;
   width: 42px;
-  background: url(/img/cross.svg) 0 0/42px 42px no-repeat;
+  background: url(../img/cross.svg) 0 0/42px 42px no-repeat;
 }
